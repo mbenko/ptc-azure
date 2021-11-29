@@ -12,8 +12,12 @@ terraform {
 provider "azurerm" { 
     # The "feature" block is required for AzureRM provider 2.x. 
     # If you are using version 1.x, the "features" block is not allowed.
-    version = "~>2.0"
-    features {}
+    # version = "~>2.0"
+    features {
+      key_vault {
+        purge_soft_delete_on_destroy = true
+      }
+    }
 }
 
 resource "azurerm_resource_group" "rg" {
@@ -21,25 +25,5 @@ resource "azurerm_resource_group" "rg" {
   location = "centralus"
 }
 
-resource "azurerm_app_service_plan" "plan" {
-    name                = "tf-dadapp-plan"
-    location            = "${azurerm_resource_group.rg.location}"
-    resource_group_name = "${azurerm_resource_group.rg.name}"
+data "azurerm_client_config" "current" {}
 
-    sku {
-        tier = "Free"
-        size = "F1"
-    }  
-}
-
-resource "azurerm_app_service" "main" {
-    name                = "tf-dadapp-site"
-    location            = "${azurerm_resource_group.rg.location}"
-    resource_group_name = "${azurerm_resource_group.rg.name}"
-    app_service_plan_id = "${azurerm_app_service_plan.plan.id}"
-
-    app_settings = {
-      "EnvName" = "Terraform"
-      "FavoriteColor" = "lightpink"
-    }
-}

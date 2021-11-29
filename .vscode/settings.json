@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/b8c7d821-4fbb-4089-8978-b966512a6a45/resourceGroups/rg-dadapp-tf/providers/Microsoft.Web/sites/tf-dadapp-site",
+    "appService.deploySubpath": "theDadApp"
+}

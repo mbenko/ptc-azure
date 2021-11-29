@@ -13,6 +13,12 @@
 
 <h2 style="background-color:@Config["FavoriteColor"];" class="jumbotron font-weight-bold" id="joke"></h2>
 
+<div class="jumbotron">
+    <div><b>Machine:</b> @System.Environment.MachineName</div>
+    <div><b>OS:</b> @System.Environment.OSVersion</div>
+    <div><b>my-secret:</b> @Config["my-secret"]</div>
+</div>
+
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script type="text/javascript">$(document).ready(function () {
         $.ajax({
