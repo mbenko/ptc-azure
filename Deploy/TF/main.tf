@@ -26,7 +26,7 @@ data "azurerm_client_config" "current" {}
 ######################################################################
 variable "app_name" {
   type    = string
-  default = "bnkpoc2"
+  default = "bnkpoc"
 }
 
 variable "region" {
@@ -39,6 +39,13 @@ variable "loc" {
   default = "cus"
 }
 
+locals {
+  common_tags = {
+    "ClientId" = data.azurerm_client_config.current.client_id
+    "ObjectId" = data.azurerm_client_config.current.object_id
+  }
+}
+
 ######################################################################
 ##  RESOURCES
 ######################################################################
@@ -46,6 +53,7 @@ variable "loc" {
 resource "azurerm_resource_group" "rg" {
   name     = "tf-${var.app_name}-${var.loc}"
   location = var.region
+  tags = local.common_tags
 }
 
 

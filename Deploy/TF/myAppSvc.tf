@@ -1,5 +1,5 @@
 resource "azurerm_app_service_plan" "plan" {
-  name                = "tf-${var.app_name}-plan"
+  name                = "${var.app_name}-plan"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
 
@@ -10,19 +10,35 @@ resource "azurerm_app_service_plan" "plan" {
 }
 
 resource "azurerm_app_service" "myApp" {
-  name                = "tf-${var.app_name}-site"
+  name                = "${var.app_name}-site"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   app_service_plan_id = azurerm_app_service_plan.plan.id
 
   app_settings = {
-    "EnvName"       = "Terraform and Key Vault"
-    "FavoriteColor" = "PaleTurquoise"
-    "my-secret"     = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault_secret.keyvault_secret.versionless_id})"
+    "EnvName"         = "Terraform and Key Vault"
+    "FavoriteColor"   = "PaleTurquoise"
+    "MySecret"        = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault_secret.keyvault_secret.versionless_id})"
+    "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.appinsights.instrumentation_key
   }
   identity {
     type = "SystemAssigned"
   }
+  connection_string {
+    name      = "MyStorage"
+    type      = "Custom"
+    value     = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault_secret.myStorageSecret.versionless_id})"
+  }
+}
+
+# Create application insights
+resource "azurerm_application_insights" "appinsights" {
+  name                = "${var.app_name}-ai"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  application_type    = "web"
+
+  tags = local.common_tags
 }
 
 resource "azurerm_key_vault_access_policy" "keyvault_policy_myApp" {
