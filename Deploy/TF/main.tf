@@ -26,7 +26,7 @@ data "azurerm_client_config" "current" {}
 ######################################################################
 variable "app_name" {
   type    = string
-  default = "bnkApp"
+  default = "bnkpoc2"
 }
 
 variable "region" {
